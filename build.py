@@ -14,8 +14,6 @@ APP_STORE_URL = "https://apps.apple.com/app/id6798649203"
 PLAY_URL = "https://play.google.com/store/apps/details?id=com.ncstudio.daybox"
 
 SVG = {
-    "svg_apple": '<svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M16.37 12.7c-.02-2.3 1.88-3.4 1.96-3.45-1.07-1.56-2.73-1.78-3.32-1.8-1.41-.14-2.76.83-3.48.83-.72 0-1.83-.81-3-.79-1.55.02-2.97.9-3.77 2.28-1.61 2.79-.41 6.92 1.16 9.18.77 1.11 1.68 2.35 2.87 2.31 1.15-.05 1.59-.75 2.98-.75 1.39 0 1.78.75 3 .72 1.24-.02 2.02-1.13 2.78-2.24.87-1.29 1.23-2.53 1.25-2.6-.03-.01-2.4-.92-2.43-3.69zM14.1 5.96c.63-.77 1.06-1.84.94-2.9-.91.04-2.02.61-2.67 1.37-.58.68-1.1 1.77-.96 2.81 1.02.08 2.05-.52 2.69-1.28z"/></svg>',
-    "svg_play": '<svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M4.5 3.3c-.3.3-.5.8-.5 1.4v14.6c0 .6.2 1.1.5 1.4l.1.1 8.2-8.2v-.2L4.6 3.2l-.1.1z"/><path d="M15.5 15.3l-2.7-2.7v-.2l2.7-2.7.1.1 3.2 1.8c.9.5.9 1.4 0 1.9l-3.2 1.8h-.1z" opacity=".85"/><path d="M15.6 15.2L12.8 12.4 4.5 20.7c.3.3.8.4 1.3.1l9.8-5.6z" opacity=".7"/><path d="M15.6 8.8L5.8 3.2c-.5-.3-1-.2-1.3.1l8.3 8.3 2.8-2.8z" opacity=".55"/></svg>',
     "svg_smile": '<svg viewBox="0 0 32 32" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" aria-hidden="true"><circle cx="11" cy="12" r="1.3" fill="currentColor" stroke="none"/><circle cx="21" cy="12" r="1.3" fill="currentColor" stroke="none"/><path d="M9.5 19.5c1.6 2.3 3.8 3.5 6.5 3.5s4.9-1.2 6.5-3.5"/></svg>',
     "svg_check": '<svg viewBox="0 0 20 20" fill="currentColor" aria-hidden="true"><path d="M10 1.5a8.5 8.5 0 1 0 0 17 8.5 8.5 0 0 0 0-17zm-1.1 12.2L5.2 10l1.3-1.3 2.4 2.4 4.6-4.6 1.3 1.3-5.9 5.9z"/></svg>',
     "svg_plus": '<svg viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true"><path d="M10 4v12M4 10h12"/></svg>',
@@ -39,10 +37,8 @@ STRINGS = {
         "nav_cta": "Get the app",
         "hero_title": "Your whole day, in one little box",
         "hero_lead": "Boxlet is a visual micro-journal. Every day gets one board — drop in a photo, a note, a checklist, your mood, what you spent. Five seconds a moment, and a month you can actually look back on.",
-        "store_apple_small": "Download on the",
-        "store_apple_big": "App Store",
-        "store_play_small": "Get it on",
-        "store_play_big": "Google Play",
+        "store_apple_alt": "Download on the App Store",
+        "store_play_alt": "Get it on Google Play",
         "fine_free": "Free",
         "fine_no_account": "No account needed",
         "fine_platforms": "iOS & Android",
@@ -123,10 +119,8 @@ STRINGS = {
         "nav_cta": "Tải ứng dụng",
         "hero_title": "Cả ngày của bạn, trong một chiếc hộp",
         "hero_lead": "Boxlet là nhật ký thị giác siêu nhẹ. Mỗi ngày một board — thả vào đó một tấm ảnh, một dòng ghi chú, một checklist, cảm xúc, khoản đã tiêu. Mỗi khoảnh khắc 5 giây, và cuối tháng có một thứ thật sự để nhìn lại.",
-        "store_apple_small": "Tải trên",
-        "store_apple_big": "App Store",
-        "store_play_small": "Tải trên",
-        "store_play_big": "Google Play",
+        "store_apple_alt": "Tải trên App Store",
+        "store_play_alt": "Tải trên Google Play",
         "fine_free": "Miễn phí",
         "fine_no_account": "Không cần tài khoản",
         "fine_platforms": "iOS & Android",
@@ -198,11 +192,14 @@ STRINGS = {
 
 
 def store_buttons(s: dict) -> str:
+    # Official badge artwork only — Apple and Google both require it, and a
+    # custom button reads as "unofficial" next to every other app site.
+    lang = s["lang"]
+    apple = f"/assets/badges/appstore-{'vi-vn' if lang == 'vi' else 'en-us'}.svg"
+    play = f"/assets/badges/play-{lang}.{'png' if lang == 'vi' else 'svg'}"
     return (
-        f'<a class="btn btn-primary btn-store" href="{APP_STORE_URL}">{SVG["svg_apple"]}'
-        f'<span><small>{s["store_apple_small"]}</small><b>{s["store_apple_big"]}</b></span></a>\n      '
-        f'<a class="btn btn-ghost btn-store" href="{PLAY_URL}">{SVG["svg_play"]}'
-        f'<span><small>{s["store_play_small"]}</small><b>{s["store_play_big"]}</b></span></a>'
+        f'<a class="badge" href="{APP_STORE_URL}"><img src="{apple}" width="160" height="54" alt="{s["store_apple_alt"]}"></a>\n      '
+        f'<a class="badge" href="{PLAY_URL}"><img src="{play}" width="182" height="54" alt="{s["store_play_alt"]}"></a>'
     )
 
 
