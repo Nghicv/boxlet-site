@@ -136,6 +136,15 @@ p { margin: 0; }
 .brand:hover { text-decoration: none; }
 .brand img { width: 32px; height: 32px; border-radius: 9px; }
 
+.nav-links {
+  display: flex;
+  gap: 1.75rem;
+  margin-inline: auto;
+  padding-inline: 2rem;
+}
+.nav-links a { color: var(--ink-2); font-weight: 600; font-size: 0.9375rem; }
+.nav-links a:hover { color: var(--ink); text-decoration: none; }
+
 .topbar-actions { display: flex; align-items: center; gap: 1.25rem; }
 
 .lang {
@@ -250,7 +259,7 @@ html[lang="vi"] .hero h1 { font-size: clamp(2.125rem, 4.6vw, 3.5rem); }
 
 /* ---------- sections ---------- */
 
-.section { padding-block: clamp(3rem, 8vw, 6rem); }
+.section { padding-block: clamp(3rem, 8vw, 6rem); scroll-margin-top: 1rem; }
 .section + .section { border-top: 1px solid var(--divider); }
 
 .section-head { max-width: 40rem; }
@@ -533,6 +542,10 @@ html[lang="vi"] .hero h1 { font-size: clamp(2.125rem, 4.6vw, 3.5rem); }
   .pillar .shot { width: 38%; max-width: 180px; flex: none; }
   .lookback { grid-template-columns: 1fr; }
   .phone-pair { margin-top: 1rem; }
+}
+
+@media (max-width: 760px) {
+  .nav-links { display: none; }
 }
 
 @media (max-width: 560px) {
