@@ -1,0 +1,223 @@
+<!DOCTYPE html>
+<html lang="{{lang}}">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>{{meta_title}}</title>
+<meta name="description" content="{{meta_description}}">
+<link rel="canonical" href="https://boxlet.day{{path}}">
+<link rel="alternate" hreflang="en" href="https://boxlet.day/">
+<link rel="alternate" hreflang="vi" href="https://boxlet.day/vi/">
+<link rel="alternate" hreflang="x-default" href="https://boxlet.day/">
+<meta name="theme-color" content="#F6F3EE" media="(prefers-color-scheme: light)">
+<meta name="theme-color" content="#131210" media="(prefers-color-scheme: dark)">
+<meta property="og:type" content="website">
+<meta property="og:site_name" content="Boxlet">
+<meta property="og:title" content="{{meta_title}}">
+<meta property="og:description" content="{{meta_description}}">
+<meta property="og:url" content="https://boxlet.day{{path}}">
+<meta property="og:image" content="https://boxlet.day/assets/og-{{lang}}.png">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<meta property="og:locale" content="{{og_locale}}">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="apple-itunes-app" content="app-id=6798649203">
+<link rel="icon" type="image/png" sizes="32x32" href="/assets/icon-32.png">
+<link rel="icon" type="image/png" sizes="192x192" href="/assets/icon-192.png">
+<link rel="apple-touch-icon" href="/assets/icon-180.png">
+<link rel="preload" href="/assets/fonts/PlusJakartaSans-Variable.woff2" as="font" type="font/woff2" crossorigin>
+<link rel="stylesheet" href="/style.css">
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "MobileApplication",
+  "name": "Boxlet",
+  "operatingSystem": "iOS, Android",
+  "applicationCategory": "LifestyleApplication",
+  "description": "{{meta_description}}",
+  "offers": { "@type": "Offer", "price": "0", "priceCurrency": "USD" },
+  "author": { "@type": "Organization", "name": "NC Apps Studio" },
+  "url": "https://boxlet.day{{path}}"
+}
+</script>
+</head>
+<body>
+
+<header class="wrap topbar">
+  <a class="brand" href="{{home}}"><img src="/assets/icon-192.png" alt="" width="32" height="32">Boxlet</a>
+  <div class="topbar-actions">
+    <a class="lang" href="{{alt_href}}" lang="{{alt_lang}}" hreflang="{{alt_lang}}">{{alt_label}}</a>
+    <a class="btn btn-primary" href="#get">{{nav_cta}}</a>
+  </div>
+</header>
+
+<main>
+
+<section class="wrap hero">
+  <div class="hero-copy">
+    <h1>{{hero_title}}</h1>
+    <p class="lead">{{hero_lead}}</p>
+    <div class="store-row">
+      {{store_buttons}}
+    </div>
+    <p class="fine"><span>{{fine_free}}</span><span>{{fine_no_account}}</span><span>{{fine_platforms}}</span></p>
+  </div>
+  <div class="hero-visual">
+    <div class="phone">
+      <img src="/assets/shots/01-board-{{lang}}.webp" width="660" height="1434" alt="{{alt_board}}" fetchpriority="high">
+    </div>
+  </div>
+</section>
+
+<section class="section">
+  <div class="wrap">
+    <div class="section-head reveal">
+      <h2>{{pillars_title}}</h2>
+      <p>{{pillars_lead}}</p>
+    </div>
+    <div class="pillars">
+      <article class="pillar reveal">
+        <div>
+          <h3>{{p1_title}}</h3>
+          <p>{{p1_body}}</p>
+        </div>
+        <div class="shot"><img src="/assets/shots/02-picker-{{lang}}.webp" width="660" height="1434" alt="{{alt_picker}}" loading="lazy"></div>
+      </article>
+      <article class="pillar reveal">
+        <div>
+          <h3>{{p2_title}}</h3>
+          <p>{{p2_body}}</p>
+        </div>
+        <div class="shot"><img src="/assets/shots/06-journey-expense-{{lang}}.webp" width="660" height="1434" alt="{{alt_expense}}" loading="lazy"></div>
+      </article>
+      <article class="pillar reveal">
+        <div>
+          <h3>{{p3_title}}</h3>
+          <p>{{p3_body}}</p>
+        </div>
+        <div class="shot"><img src="/assets/shots/07-feed-{{lang}}.webp" width="660" height="1434" alt="{{alt_feed}}" loading="lazy"></div>
+      </article>
+    </div>
+  </div>
+</section>
+
+<section class="section paper-section">
+  <div class="wrap">
+    <div class="section-head center reveal">
+      <h2>{{paper_title}}</h2>
+      <p>{{paper_lead}}</p>
+    </div>
+
+    <div class="board" aria-label="{{board_aria}}">
+      <div class="card card-photo w2 h2 reveal" style="--i:0">
+        <img src="/assets/photo-coffee.webp" width="480" height="480" alt="{{alt_coffee}}" loading="lazy">
+      </div>
+      <div class="card card-todo w2 reveal" style="--i:1">
+        <div class="card-label">{{label_todo}}<span class="meta">3/4</span></div>
+        <div class="progress"><i></i></div>
+        <div class="tick">{{svg_check}}{{sample_todo}}</div>
+      </div>
+      <div class="card card-mood card-sm reveal" style="--i:2">
+        <div class="card-label">{{label_mood}}</div>
+        <div class="card-body"><div class="mood-face">{{svg_smile}}{{sample_mood}}</div></div>
+      </div>
+      <div class="card card-weather card-sm reveal" style="--i:3">
+        <div class="card-label">{{label_weather}}</div>
+        <div class="card-body"><p class="card-value">☀️ 31°</p><p class="card-sub">{{sample_weather}}</p></div>
+      </div>
+      <div class="card card-expense w2 reveal" style="--i:4">
+        <div class="card-label">{{label_expense}}<span class="meta">{{sample_expense_meta}}</span></div>
+        <div class="card-body"><p class="card-value">{{sample_expense}}</p></div>
+      </div>
+      <div class="card card-note w2 reveal" style="--i:5">
+        <div class="card-label">{{label_note}}</div>
+        <div class="card-body"><p class="card-text">{{sample_note}}</p></div>
+      </div>
+      <div class="card card-link w2 reveal" style="--i:6">
+        <div class="card-label">{{label_link}}</div>
+        <div class="card-body"><p class="card-text">{{sample_link}}</p><p class="card-sub">blog.boxlet.day</p></div>
+      </div>
+      <div class="card card-wake card-sm reveal" style="--i:7">
+        <div class="card-label">{{label_wake}}</div>
+        <div class="card-body"><p class="card-value">6:45</p><p class="card-sub">{{sample_wake}}</p></div>
+      </div>
+      <div class="card card-bed card-sm reveal" style="--i:8">
+        <div class="card-label">{{label_bed}}</div>
+        <div class="card-body"><p class="card-value">23:10</p><p class="card-sub">{{sample_bed}}</p></div>
+      </div>
+      <div class="card card-timer w2 reveal" style="--i:9">
+        <div class="card-label">{{label_timer}}</div>
+        <div class="card-body"><p class="card-value">1:25:00</p><p class="card-sub">{{sample_timer}}</p></div>
+      </div>
+      <div class="card card-add w2 reveal" style="--i:10" aria-hidden="true">
+        {{svg_plus}}{{add_card}}
+      </div>
+    </div>
+
+  </div>
+</section>
+
+<section class="section">
+  <div class="wrap lookback">
+    <div class="reveal">
+      <div class="section-head">
+        <h2>{{look_title}}</h2>
+        <p>{{look_lead}}</p>
+      </div>
+      <ul>
+        <li><span class="ico">{{svg_flame}}</span><div><b>{{look1_t}}</b><span>{{look1_b}}</span></div></li>
+        <li><span class="ico">{{svg_chart}}</span><div><b>{{look2_t}}</b><span>{{look2_b}}</span></div></li>
+        <li><span class="ico">{{svg_grid}}</span><div><b>{{look3_t}}</b><span>{{look3_b}}</span></div></li>
+        <li><span class="ico">{{svg_postcard}}</span><div><b>{{look4_t}}</b><span>{{look4_b}}</span></div></li>
+      </ul>
+    </div>
+    <div class="phone-pair reveal">
+      <div class="phone phone-sm"><img src="/assets/shots/05-journey-mood-{{lang}}.webp" width="660" height="1434" alt="{{alt_mood}}" loading="lazy"></div>
+      <div class="phone phone-sm"><img src="/assets/shots/08-postcard-{{lang}}.webp" width="660" height="1434" alt="{{alt_postcard}}" loading="lazy"></div>
+    </div>
+  </div>
+</section>
+
+<section class="section closing" id="get">
+  <div class="wrap reveal">
+    <h2>{{closing_title}}</h2>
+    <div class="store-row">
+      {{store_buttons}}
+    </div>
+    <p class="pro">{{pro_line}} <a href="/terms.html">{{pro_terms}}</a></p>
+  </div>
+</section>
+
+</main>
+
+<footer class="footer">
+  <div class="wrap">
+    <span>© 2026 NC Apps Studio · Boxlet</span>
+    <nav aria-label="{{footer_aria}}">
+      <a href="/privacy.html">{{f_privacy}}</a>
+      <a href="/terms.html">{{f_terms}}</a>
+      <a href="/support.html">{{f_support}}</a>
+      <a href="/delete-account.html">{{f_delete}}</a>
+      <a href="{{alt_href}}" lang="{{alt_lang}}" hreflang="{{alt_lang}}">{{alt_label}}</a>
+    </nav>
+  </div>
+</footer>
+
+<script>
+(function () {
+  var reduce = window.matchMedia && window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+  var items = document.querySelectorAll(".reveal");
+  if (reduce || !("IntersectionObserver" in window)) {
+    items.forEach(function (el) { el.classList.add("in"); });
+    return;
+  }
+  var io = new IntersectionObserver(function (entries) {
+    entries.forEach(function (e) {
+      if (e.isIntersecting) { e.target.classList.add("in"); io.unobserve(e.target); }
+    });
+  }, { rootMargin: "0px 0px -8% 0px", threshold: 0.1 });
+  items.forEach(function (el) { io.observe(el); });
+})();
+</script>
+</body>
+</html>
