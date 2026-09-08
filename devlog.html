@@ -1,0 +1,71 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Boxlet — Build log</title>
+<meta name="description" content="How Boxlet was built: one Compose Multiplatform codebase shipped to iOS and Android in a month, and the things that went wrong on the way.">
+<link rel="icon" type="image/png" sizes="32x32" href="/assets/icon-32.png">
+<link rel="apple-touch-icon" href="/assets/icon-180.png">
+<link rel="stylesheet" href="/style.css">
+</head>
+<body>
+<header class="wrap topbar">
+  <a class="brand" href="/"><img src="/assets/icon-192.png" alt="" width="32" height="32">Boxlet</a>
+  <div class="topbar-actions">
+    <a class="btn btn-primary" href="/#get">Get the app</a>
+  </div>
+</header>
+<main class="wrap legal"><div class="prose">
+
+<h1>Build log</h1>
+<p class="muted">Boxlet was written between 5 August and 6 September 2026 and shipped to the App Store and Google Play on the last of those days. It was built for <a href="https://revenuecat-shipaton-2026.devpost.com/">RevenueCat Shipaton 2026</a>. This is the engineering side of that month — mostly the parts that went wrong, because those are the parts another developer can use.</p>
+
+<h2>5 August — a layout that cannot break</h2>
+<p>The first real decision was about the board, and it was made before any of it was drawn: <strong>layout is derived from order and span, never stored as coordinates.</strong> There is no <code>(x, y)</code> anywhere in Boxlet. A card knows how many cells it occupies and where it sits in a list, and the grid is recomputed from that on every composition.</p>
+<p>Absolute positions were rejected because they fail in three ways that derived layout cannot. Two devices editing the same day need a merge rule for positions, and every rule you pick produces overlaps in some ordering. Deleting a card leaves a hole and nothing in the data says what should move up. Making one card larger requires a correction pass over every card after it.</p>
+<p>With derived layout none of those exist. Every arrangement you can reach is legal by construction, so there is no such thing as a corrupt board and no repair code to write.</p>
+<p>The packing pays for this in density. It refuses to pull a later small card forward into an earlier gap, so a board is sometimes looser than it could be. That is deliberate: without it, dragging a card to second place would make it appear somewhere in the middle, and dragging would stop meaning anything.</p>
+
+<h2>Mid August — one UI, two platforms</h2>
+<p>Boxlet is 93% one Kotlin codebase, and 100% of what you can see is Compose Multiplatform:</p>
+<ul>
+<li><code>commonMain</code> — 33,652 lines</li>
+<li><code>androidMain</code> — 943 lines</li>
+<li><code>iosMain</code> — 932 lines</li>
+<li><code>iosApp/</code> — 357 lines of Swift, in 7 files</li>
+</ul>
+<p>All 341 composables live in <code>commonMain</code>. There is no SwiftUI screen and no Android-only screen anywhere in the project. iOS renders the same Compose tree through <code>ComposeUIViewController</code>, and <code>ContentView.swift</code> is 24 lines that host it and forward the system colour scheme.</p>
+<p>The 2,274 lines outside <code>commonMain</code> are <code>expect</code>/<code>actual</code> bridges and nothing else: camera and photo picker, secure storage, the SQLDelight driver, the Ktor engine, location, notification channels and APNs, and four sign-in providers.</p>
+<p>Because an <code>expect</code> and its <code>actual</code> have to live in the same module, every platform seam became its own module — twenty in total, split <code>:core:&lt;noun&gt;</code> and <code>:feature:&lt;noun&gt;</code>. A custom Gradle task, <code>checkModuleGraph</code>, is wired into <code>check</code> and fails the build if a feature module reaches into <code>:core:data</code> or depends on another feature. Screens structurally cannot touch Ktor or SQLDelight.</p>
+
+<h2>15 August — two traps in Play Console</h2>
+<p>Pricing a subscription took an afternoon longer than it should have, for two reasons that have nothing to do with code.</p>
+<p>The first: Play Console reads the price field using the console's display language. In Vietnamese a dot is a thousands separator, so typing <code>2.99</code> into a USD price field produces <strong>$299.00</strong>. It saves without complaint.</p>
+<p>The second is worse, because it looks like it worked. Editing prices in bulk — select all rows, set the price, save — only applies to the rows the table has actually rendered. The footer said <em>177 countries selected</em>. Bahrain and Poland got the new price. Thailand and Vietnam kept the old one.</p>
+<p>Base plan codes cannot be reused once created, so fixing it meant creating a new one. Boxlet's monthly plan is called <code>monthly-v2</code> for exactly that reason, and the first <code>monthly</code> sits deactivated beside it. Set prices when you create a base plan, and check a country from the end of the alphabet before you trust the count.</p>
+
+<h2>The billing chicken-and-egg</h2>
+<p>Google Play will not let you create a subscription product until a build containing the Play Billing Library is on a track. That build is the one you are trying to make, and it needs the subscription to exist so the paywall has something to show.</p>
+<p>RevenueCat's Test Store breaks the deadlock — the paywall runs, purchases complete, the entitlement flips. But it is hard-blocked in release builds: a signed release carrying a Test Store key throws up a blocking dialog on launch, and the SDK warns it will crash in production. So the Test Store gets you a working paywall and nothing you can ship. You build with it, then swap the key and rebuild.</p>
+<p>App Store Connect had a quieter version of the same problem. Both subscriptions sat at <code>MISSING_METADATA</code> with every documented field filled. The cause was the <em>subscription group</em> localization — the group name iOS shows in the system subscription screen — which no submission guide we found mentions. Creating <code>en-US</code> and <code>vi</code> localizations flipped both products to <code>READY_TO_SUBMIT</code> immediately.</p>
+
+<h2>A ghost that only lived in the simulator</h2>
+<p>For two days, sheets and dialogs on iOS rendered completely invisible. The layout was right, the state was right, taps landed where the content should have been — nothing drew. It looked like a Compose Multiplatform layering bug, and it was investigated as one.</p>
+<p>On a real iPhone everything drew correctly, and had been the whole time.</p>
+<p>The worst bugs are not the hard ones. They are the ones where a tool quietly reports something untrue and you spend your effort in the wrong place. Anything with an overlay is now checked on hardware before it is believed.</p>
+
+<h2>22 August — the grid came out as a library</h2>
+<p>Building the board meant discovering that Compose Multiplatform has no drag-to-reorder grid for items that span multiple cells. <code>LazyVerticalGrid</code> does spans without reordering; the reorderable libraries do lists, not grids. So one was written, and at the end of the month it was pulled out of the app and published as <a href="https://github.com/Nghicv/slotgrid-compose">slotgrid-compose</a> — Apache 2.0, on Maven Central, targeting Android, iOS, desktop and Wasm from pure <code>commonMain</code>. There is a <a href="https://nghicv.github.io/slotgrid-compose/">live demo</a> you can drag around in a browser.</p>
+<p>Generalising it surfaced a bug the app could never have hit. With a fixed four-column grid, no card could be wider than the grid. Once the column count became a parameter, an oversized span sent the placement scan advancing row after row forever — a hang, not a wrong drawing. It is clamped and tested now.</p>
+<p>Then a subtler one. A test was written to check the library worked in someone else's project. It passed. It was worthless: it called the component with the minimum arguments, so it never touched half the types the public API exposes. A stricter version failed immediately — the Compose dependencies were declared <code>implementation</code> rather than <code>api</code>, so <code>Modifier</code>, <code>Dp</code>, <code>Rect</code> and <code>ScrollState</code> never reached consumers. Nobody could have used the version that shipped as 0.1.0.</p>
+<p>The library's own build cannot catch that class of bug — inside the repository the Compose artifacts are always on the classpath. There is now a script in CI that builds a throwaway project depending on the library the way a stranger would, declaring the bare minimum and using every parameter of the public API. It was verified by watching it fail against 0.1.0 before watching it pass against 0.1.1.</p>
+
+<h2>6 September — shipped</h2>
+<p>Boxlet went live on both stores on the same day, from one repository, through fastlane on both platforms.</p>
+<p>The expensive part of shipping cross-platform was never the screens. Compose Multiplatform on iOS is production-ready in a way it was not eighteen months ago. The expensive part is the seams — auth providers, billing, push notifications — and, by a wide margin, store metadata. Roughly as much calendar time went into App Store Connect and Play Console as into the entire social feature set.</p>
+<p class="muted">The library's own reasoning is recorded in <a href="https://github.com/Nghicv/slotgrid-compose/blob/main/docs/design.md">docs/design.md</a> — why layout is derived, why the packing gives up density, why drag decisions follow the finger rather than the dragged card's centre.</p>
+
+</div></main>
+</body>
+</html>

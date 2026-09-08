@@ -108,6 +108,7 @@ STRINGS = {
         "f_privacy": "Privacy",
         "f_terms": "Terms",
         "f_support": "Support",
+        "f_devlog": "Build log",
         "f_delete": "Delete account",
     },
     "vi": {
@@ -194,6 +195,7 @@ STRINGS = {
         "f_privacy": "Quyền riêng tư",
         "f_terms": "Điều khoản",
         "f_support": "Hỗ trợ",
+        "f_devlog": "Nhật ký dựng app",
         "f_delete": "Xoá tài khoản",
     },
 }
